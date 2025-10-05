@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/01 17:56:12 by nkojima           #+#    #+#             */
-/*   Updated: 2025/08/03 19:24:35 by nkojima          ###   ########.fr       */
+/*   Created: 2025/08/03 18:39:04 by nkojima           #+#    #+#             */
+/*   Updated: 2025/08/03 19:34:07 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /**
  * Extract a line that contains a newline character
@@ -124,40 +124,71 @@ static char	*read_until_newline(int fd, char *stored_data)
  */
 char	*get_next_line(int fd)
 {
-	static char	*stored_data = NULL;
+	static char	*stored_data[OPEN_MAX];
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
 		return (NULL);
-	if (!stored_data || !ft_strchr(stored_data, '\n'))
-		stored_data = read_until_newline(fd, stored_data);
-	return (extract_line(&stored_data));
+	if (!stored_data[fd] || !ft_strchr(stored_data[fd], '\n'))
+		stored_data[fd] = read_until_newline(fd, stored_data[fd]);
+	return (extract_line(&stored_data[fd]));
 }
 
 // #include <fcntl.h>
 // #include <stdio.h>
 
-// int	main(int argc, char **argv)
+// int    main(void)
 // {
-// 	int		fd;
-// 	char	*line;
+//     int        fd_sample;
+//     int        fd_sam;
+//     char    *line;
+//     int        i;
 
-// 	if (argc != 2)
-// 	{
-// 		printf("Usage: ./a.out FileName");
-// 		return (1);
-// 	}
-// 	fd = open(argv[1], O_RDONLY);
-// 	printf("%d\n", fd);
-// 	if (fd < 0)
-// 	{
-// 		perror("open");
-// 		return (1);
-// 	}
-// 	while ((line = get_next_line(fd)))
-// 	{
-// 		printf("%s", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return (0);
+//     // fd = 0;
+//     fd_sample = open("sample.txt", O_RDONLY);
+//     fd_sam = open("sam.txt", O_RDONLY);
+
+//     if (fd_sam == -1 || fd_sample == -1)
+//     {
+//         perror("open");
+//         return (1);
+//     }
+//     i = 0;
+//     printf("%d\n",fd_sample);
+//     printf("%d\n",fd_sam);
+
+//     line = get_next_line(fd_sample);
+//     printf("sample:%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sample);
+//     printf("sample:%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sam);
+//     printf("sam   :%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sample);
+//     printf("sample:%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sample);
+//     printf("sample:%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sam);
+//     printf("sam   :%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sample);
+//     printf("sample:%s", line);
+//     free(line);
+
+//     line = get_next_line(fd_sam);
+//     printf("sam   :%s", line);
+//     free(line);
+
+//     close(fd_sample);
+//     close(fd_sam);
+//     return (0);
 // }
