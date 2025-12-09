@@ -6,7 +6,7 @@
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 13:56:30 by nkojima           #+#    #+#             */
-/*   Updated: 2025/08/02 19:52:40 by nkojima          ###   ########.fr       */
+/*   Updated: 2025/12/09 22:59:55 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,32 +87,23 @@ char	*ft_strdup(const char *s1)
  *
  * Note: This function frees the first argument
  */
-char	*ft_strjoin(char *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	len1;
 	size_t	len2;
-	size_t	i;
+	size_t	total_len;
 	char	*joined;
 
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	joined = malloc(sizeof(*joined) * (len1 + len2 + 1));
+	total_len = len1 + len2;
+	joined = malloc(sizeof(*joined) * (total_len + 1));
 	if (!joined)
-		return (free(s1), NULL);
-	i = 0;
-	while (s1 && i < len1)
-	{
-		joined[i] = s1[i];
-		i++;
-	}
-	i = 0;
-	while (s2 && i < len2)
-	{
-		joined[len1 + i] = s2[i];
-		i++;
-	}
-	joined[len1 + len2] = '\0';
-	return (free(s1), joined);
+		return (NULL);
+	ft_memcpy(joined, s1, len1);
+	ft_memcpy(joined + len1, s2, len2);
+	joined[total_len] = '\0';
+	return (joined);
 }
 
 /**
@@ -123,21 +114,16 @@ char	*ft_strjoin(char *s1, char const *s2)
  * @param n Number of bytes to copy
  * @return void* Pointer to destination
  */
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_memcpy(void *dst, const void *src, size_t cpy_size)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
-	size_t				i;
+	unsigned char		*dst_ptr;
+	const unsigned char	*src_ptr;
 
-	if (!dst && !src)
-		return (NULL);
-	d = (unsigned char *)dst;
-	s = (const unsigned char *)src;
-	i = 0;
-	while (i < n)
-	{
-		d[i] = s[i];
-		i++;
-	}
+	if (cpy_size == 0 || dst == src)
+		return (dst);
+	dst_ptr = (unsigned char *)dst;
+	src_ptr = (const unsigned char *)src;
+	while (cpy_size--)
+		*dst_ptr++ = *src_ptr++;
 	return (dst);
 }
